@@ -20,12 +20,12 @@ export class User extends BaseEntity {
 
     @ApiProperty()
     @Column()
-    //@Exclude()
+    @Exclude()
     password: string;
 
     @ApiProperty()
     @Column()
-    //@Exclude()
+    @Exclude()
     salt: string;
 
     @ApiProperty()

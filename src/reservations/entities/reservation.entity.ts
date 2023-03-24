@@ -5,6 +5,10 @@ import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColum
 
 @Entity('reservations')
 export class Reservation extends BaseEntity {
+
+    @ApiProperty()
+    @PrimaryGeneratedColumn()
+    id: number;
     
     @ApiProperty()
     @Column()

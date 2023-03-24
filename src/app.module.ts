@@ -5,6 +5,7 @@ import { DataSource } from 'typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { Comment } from './comments/entities/comment.entity';
 import { CommentsModule } from './comments/comments.module';
 import { Hotel } from './hotels/entities/hotel.entity';
 import { HotelsModule } from './hotels/hotels.module';
@@ -26,7 +27,7 @@ import { UsersModule } from './users/users.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: [User, Comment, Hotel, Reservation, Room],
-      synchronize: false,
+      synchronize: true,
       logging: false,
     }),
     AuthModule, CommentsModule, HotelsModule, ReservationsModule, RoomsModule, UsersModule],
