@@ -10,13 +10,15 @@ import { UpdateUserDto } from './dto/update-user.dto';
 */
 @Injectable()
 export class UsersService {
-  deletedAmi: any;
 
   /** 
-    * @method create :
-    * Method permettant de créer un utlisateur suivant le modèle du CreatUserDto.
+    * @method createUser :
+    * 
+    * Method permettant de créer un compte client suivant le modèle du CreatUserDto.
+    * 
     * * Crypter le password grâce au hash/bcrypt lors de la création du compte client.
     */
+
   async createUser(createUserDto: CreateUserDto): Promise<User> { // Promise (promet de te renvoyer un user)
 
     const user = User.create(createUserDto)

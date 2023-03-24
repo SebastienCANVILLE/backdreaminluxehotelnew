@@ -1,12 +1,26 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller, Get, Request, Post, UseGuards, Body, ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { LocalAuthGuard } from './auth/local-auth.guard';
+import { AuthService } from './auth/auth.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly authService: AuthService) { }
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @ApiTags('Sign In')
+  @UseGuards(LocalAuthGuard)
+  @Post('auth/login')
+  async login(@Request() req: any) {
+    return this.authService.login(req.body);
   }
+
+  @ApiTags('Profil Utilisateur')
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getProfile(@Request() req) {
+    return req.user;
+  }
+  
 }

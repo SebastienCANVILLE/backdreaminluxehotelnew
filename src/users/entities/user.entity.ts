@@ -63,7 +63,7 @@ export class User extends BaseEntity {
         default: UserRoleEnum.USER
     })
     @Exclude()
-    role: string;
+    role: UserRoleEnum;
 
     @ApiProperty({ type: () => Comment })
     @OneToMany(() => Comment, (comment) => comment.user, { eager: true })
