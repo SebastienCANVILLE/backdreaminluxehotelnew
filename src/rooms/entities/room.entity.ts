@@ -1,5 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Hotel } from "src/hotels/entities/hotel.entity";
+import { Reservation } from "src/reservations/entities/reservation.entity";
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('rooms')
 export class Room extends BaseEntity {
@@ -19,5 +21,13 @@ export class Room extends BaseEntity {
     @ApiProperty()
     @Column()
     price: number;
+
+    @ApiProperty({ type: () => Reservation })
+    @OneToMany(() => Reservation, (reservation) => reservation.rooms, { eager: true })
+    reservations: Reservation[]
+
+    @ApiProperty({ type: () => Hotel })
+    @ManyToOne(() => Hotel, (hotel) => hotel.rooms, { onDelete: 'CASCADE' })
+    hotel: Hotel;
 
 }

@@ -1,7 +1,10 @@
 import { Exclude } from "class-transformer";
-import { Column, Entity, PrimaryGeneratedColumn, BaseEntity } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, BaseEntity, OneToMany, ManyToMany } from "typeorm";
 import { ApiProperty } from '@nestjs/swagger';
 import { UserRoleEnum } from "src/enum/user-role.enum";
+import { Reservation } from "src/reservations/entities/reservation.entity";
+import { Comment } from "src/comments/entities/comment.entity";
+import { Hotel } from "src/hotels/entities/hotel.entity";
 
 
 @Entity('users')
@@ -61,6 +64,19 @@ export class User extends BaseEntity {
     })
     @Exclude()
     role: string;
+
+    @ApiProperty({ type: () => Comment })
+    @OneToMany(() => Comment, (comment) => comment.user, { eager: true })
+    comments: Comment[]
+
+    @ApiProperty({ type: () => Reservation })
+    @OneToMany(() => Reservation, (reservation) => reservation.user, { eager: true })
+    reservations: Reservation[]
+
+    // relation M/M avec l'hôtel pour la pratique du système de like de l'appli
+    @ApiProperty({ type: () => Hotel })
+    @ManyToMany(() => Hotel, (hotel) => hotel.users)
+    hotels: Hotel[]
 
 }
 

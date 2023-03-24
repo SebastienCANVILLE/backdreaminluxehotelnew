@@ -1,5 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Comment } from "src/comments/entities/comment.entity";
+import { Room } from "src/rooms/entities/room.entity";
+import { User } from "src/users/entities/user.entity";
+import { BaseEntity, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('hotels')
 export class Hotel extends BaseEntity {
@@ -27,5 +30,21 @@ export class Hotel extends BaseEntity {
     @ApiProperty()
     @Column()
     phone_number: string;
+
+    @ApiProperty({ type: () => Comment })
+    @OneToMany(() => Comment, (comment) => comment.hotel, { eager: true })
+    comments: Comment[]
+
+    @ApiProperty({ type: () => Room })
+    @OneToMany(() => Room, (room) => room.hotel, { eager: true })
+    rooms: Room[]
+
+    // relation M/M avec le user pour la pratique du système de like de l'appli
+    @ApiProperty({ type: () => User })
+    @ManyToMany(() => User, (user) => user.hotels, {
+        cascade: true,
+    })
+    @JoinTable()
+    users: User[]
 
 }
