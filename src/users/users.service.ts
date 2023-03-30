@@ -25,8 +25,6 @@ export class UsersService {
     user.salt = await bcrypt.genSalt();
     user.password = await bcrypt.hash(createUserDto.password, user.salt);
     await user.save()
-    //delete user.password
-    //delete user.salt
     return user
 
   }
@@ -35,7 +33,7 @@ export class UsersService {
     * @method findAll :
     * Method permettant de rechercher tous les utilisateurs.
     */
-  async findAllUser(): Promise<User[]> { // recherche de tous les users
+  async findAllUser(): Promise<User[]> {
     return await User.find();
   }
 

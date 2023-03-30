@@ -15,7 +15,7 @@ import { ApiProperty, ApiTags } from '@nestjs/swagger';
  * * Celle-ci est dédiée à la création de comptes, à la recherche via des critères, à la modifification de données et à la suppression d'un compte client.
  */
 @ApiTags('Users')
-@UseInterceptors(ClassSerializerInterceptor) // permet de cacher les données lors d'une requête (password etc...)
+@UseInterceptors(ClassSerializerInterceptor) // permet de cacher les données lors d'une requête (password etc...) grâce à l'exclude de l'entity.
 @Controller('users')
 
 export class UsersController {
@@ -146,7 +146,7 @@ export class UsersController {
   @ApiProperty()
   async update(@Body() updateUserDto: UpdateUserDto, @Req() req) {
 
-    const userLog = req.user.userId
+    const userLog = req.user.id
     const updateUser = await this.usersService.updateUser(userLog, updateUserDto,);
 
     return {
@@ -163,7 +163,7 @@ export class UsersController {
   * @method deletedUser :
   * 
   * Une méthode permettant de :
-  * * Controler les données entrantes lors de la suppression du profil par un développeur.
+  * * Controler les données entrantes lors de la suppression du profil par un user.
   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
   * * Le développeur doit être loger pour pouvoir supprimer son profil. Il ne peut modifier le profil d'un autre
   */
@@ -173,7 +173,7 @@ export class UsersController {
   @ApiProperty()
   async deletedUser(@Req() req) {
 
-    const id = req.user.userId
+    const id = req.user.id
 
     const user = await this.usersService.findUserByID(id);
 
