@@ -119,7 +119,7 @@ export class RoomsController {
 
     const numberRoomExist = await this.roomsService.findRoomByNumber(updateRoomDto.number_room);
 
-    if (numberRoomExist) {
+    if (numberRoomExist) { // à certifier avec findRoomByNumberAndHotel
       throw new HttpException("Le numéro de la chambre exist déjà", HttpStatus.CONFLICT);
     }
 

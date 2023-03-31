@@ -89,9 +89,9 @@ export class UsersController {
 
   @Get(':id')
   @ApiProperty()
-  findUserByID(@Param('id') id: string) {
+  async findUserByID(@Param('id') id: string) {
 
-    const userExist = this.usersService.findUserByID(+id);
+    const userExist = await this.usersService.findUserByID(+id);
 
     if (!userExist) {
       throw new HttpException("L'utilisateur n'existe pas", HttpStatus.NOT_FOUND);

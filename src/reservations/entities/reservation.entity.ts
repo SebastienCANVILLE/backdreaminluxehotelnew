@@ -10,9 +10,9 @@ export class Reservation extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
     
-    @ApiProperty()
+    /* @ApiProperty()
     @Column()
-    reference: string;
+    reference: string; */
 
     @ApiProperty()
     @Column()

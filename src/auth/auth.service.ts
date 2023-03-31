@@ -30,7 +30,7 @@ export class AuthService {
 
         const targetUser = await this.usersService.findUserByEmail(user.email);
         const payload = { email: targetUser.email, sub: targetUser.id };
-        console.log(targetUser);
+        //console.log(targetUser);
         
 
         return {

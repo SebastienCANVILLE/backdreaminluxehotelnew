@@ -43,7 +43,6 @@ export class UsersService {
   * Method permettant de rechercher tous les utilisateurs par son Id.
   */
   async findUserByID(id: number): Promise<User> {
-    console.log(id);
 
     return await User.findOneBy({ id: id })
   }
