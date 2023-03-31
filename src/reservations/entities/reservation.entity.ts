@@ -25,7 +25,7 @@ export class Reservation extends BaseEntity {
 
     @ApiProperty({ type: () => Room })
     @ManyToOne(() => Room, (room) => room.reservations, {onDelete: 'CASCADE' })
-    rooms: Room[]
+    room: Room
 
     @ApiProperty({ type: () => User })
     @ManyToOne(() => User, (user) => user.reservations, {onDelete: 'CASCADE' })

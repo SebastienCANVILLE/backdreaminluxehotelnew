@@ -53,7 +53,7 @@ export class HotelsService {
   * @method findHotelByName :
   * Method permettant de rechercher un hôtel par son nom.
   */
-  async findHotelByName(name: string) {
+  async findHotelByName(name: string) : Promise<Hotel> {
     return await Hotel.findOneBy({ name_hotel : name });
   }
 
@@ -68,9 +68,9 @@ export class HotelsService {
   */
   async updateHotel(id: number, updateHotelDto: UpdateHotelDto): Promise<Hotel> {
 
-    const hotel = await Hotel.findOneBy({ id }); // const permettant de retrouver une présentation par son id
+    const hotel = await Hotel.findOneBy({ id }); // const permettant de retrouver une chambre par son id
 
-    hotel.name_hotel = updateHotelDto.name_hotel; // hotel.name = donnée actuelle ; updatePresentationDto.name = nouvelle donnée
+    hotel.name_hotel = updateHotelDto.name_hotel; // hotel.name = donnée actuelle ; updateHotelDto.name = nouvelle donnée
     hotel.adress_line = updateHotelDto.adress_line;
     hotel.zipCode = updateHotelDto.zipCode;
     hotel.city = updateHotelDto.city;

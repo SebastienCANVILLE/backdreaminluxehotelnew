@@ -12,10 +12,6 @@ export class Room extends BaseEntity {
 
     @ApiProperty()
     @Column()
-    name_room: string;
-
-    @ApiProperty()
-    @Column()
     number_room: string;
 
     @ApiProperty()
@@ -23,7 +19,7 @@ export class Room extends BaseEntity {
     price: number;
 
     @ApiProperty({ type: () => Reservation })
-    @OneToMany(() => Reservation, (reservation) => reservation.rooms, { eager: true })
+    @OneToMany(() => Reservation, (reservation) => reservation.room, { eager: true })
     reservations: Reservation[]
 
     @ApiProperty({ type: () => Hotel })

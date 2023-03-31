@@ -26,7 +26,6 @@ export class HotelsController {
     const nameHotelExist = await this.hotelsService.findHotelByName(createHotelDto.name_hotel);
 
     if(nameHotelExist){
-      console.log("Le nom de l'hôtel exist déjà");
       
       throw new HttpException("Le nom de l'hôtel exist déjà", HttpStatus.CONFLICT);      
     }
@@ -103,13 +102,13 @@ export class HotelsController {
   @ApiOperation({ summary: "Modifier les informations d'un hôtel" })
   async updateHotel(@Param('id') id: string, @Body() updateHotelDto: UpdateHotelDto) {
 
-    const nameHotelExist = await this.hotelsService.findHotelByName(updateHotelDto.name_hotel);
+    /* const nameHotelExist = await this.hotelsService.findHotelByName(updateHotelDto.name_hotel);
 
     if(nameHotelExist){
       console.log("Le nom de l'hôtel exist déjà");
       
       throw new HttpException("Le nom de l'hôtel exist déjà", HttpStatus.CONFLICT);      
-    }
+    } */
 
     const hotelExist = await this.hotelsService.findHotelByID(+id);
 
@@ -143,7 +142,7 @@ export class HotelsController {
     if (!hotelExist) {
       throw new HttpException("L'hôtel n'existe pas", HttpStatus.NOT_FOUND)
     }
-    
+
     const deletedHotel = await this.hotelsService.deleteHotel(id);
 
     return {
