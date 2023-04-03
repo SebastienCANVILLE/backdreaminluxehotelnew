@@ -3,9 +3,8 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateReservationDto {
 
-/*     @ApiProperty()
-    @IsString()
-    //@IsNotEmpty()
+   /*  @ApiProperty()
+    @IsString()    
     reference: string; */
 
     @ApiProperty()
@@ -18,6 +17,7 @@ export class CreateReservationDto {
     @IsNotEmpty()
     departure_date: Date;
 
+    @ApiProperty()
     @IsNumber()
     roomId: number
 }

@@ -4,9 +4,13 @@ import { User } from 'src/users/entities/user.entity';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { Reservation } from './entities/reservation.entity';
+import { LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
+import { format, parse } from 'date-fns';
 
 @Injectable()
 export class ReservationsService {
+  Reservation: any;
+
 
   /** 
   * @method createReservation :
@@ -15,7 +19,7 @@ export class ReservationsService {
   * permet de lier le client à la réservation lors de sa création.
   * permet de lier la chambre à la réservation lors de sa création.
   */
-  async createReservation(createReservationDto: CreateReservationDto, userReservation: User, roomReservation: Room): Promise<Reservation> {
+ async createReservation(createReservationDto: CreateReservationDto, userReservation: User, roomReservation: Room): Promise<Reservation> {
 
     const newReservation = Reservation.create({ ...createReservationDto })
     newReservation.user = userReservation // permet de lier le client à la réservation
@@ -24,7 +28,7 @@ export class ReservationsService {
     await newReservation.save()
 
     return newReservation
-  }
+  } 
 
 
   /** 
@@ -55,25 +59,36 @@ export class ReservationsService {
   * * Mofification d'une ou plusieurs données dans le body
   * * Sauvegarde des nouvelles informations en BDD
   */
-    async updateReservation(id: number, updateReservationDto: UpdateReservationDto): Promise<Reservation> {
+  async updateReservation(id: number, updateReservationDto: UpdateReservationDto): Promise<Reservation> {
 
-      const reservation = await Reservation.findOneBy({ id }); // const permettant de retrouver une présentation par son id
-      const room = await Room.findOneBy({ id });
-  
-      reservation.arrival_date = updateReservationDto.arrival_date;// reservation.arrival_date = donnée actuelle ; updateReservationDto.arrival_date = nouvelle donnée
-      reservation.departure_date = updateReservationDto.departure_date;
-      room.id = updateReservationDto.roomId
-  
-      await reservation.save()
-  
-      return reservation
-    }
+    // const permettant de retrouver une réservation par son id
+    const reservation = await Reservation.findOneBy({ id });
 
+    // const permettant de retrouver une chambre par son id
+    const room = await Room.findOneBy({ id });
+
+    await reservation.save()
+
+    return reservation
+  }
 
 
+  /** 
+  * @method deleteReservation :
+  * Method permettant de supprimer une réservation.
+  * * Recherche de la reservation
+  * * Suppression de celle-ci grâce à .delete
+  */
+  async deleteReservation(id: number): Promise<Reservation> {
 
+    const reservationDeleted = await Reservation.findOneBy({ id })
 
+    await Reservation.delete({ id });
 
+    return reservationDeleted;
+  }
 
 
 }
+
+

@@ -3,6 +3,9 @@ import { Hotel } from 'src/hotels/entities/hotel.entity';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { Room } from './entities/room.entity';
+import { LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
+import { Reservation } from 'src/reservations/entities/reservation.entity';
+import { log } from 'console';
 
 @Injectable()
 export class RoomsService {
@@ -53,6 +56,25 @@ export class RoomsService {
     return await Room.findOneBy({ number_room: number });
   }
 
+  // méthode permettant de vérifier si la chambre est disponible
+  async roomAvailable(roomId: number, arrivalDate: Date, departureDate: Date): Promise<Boolean> { // A VOIR !!!!!!!!!!!!!!!!!!!!!!!!
+    console.log(typeof arrivalDate);
+
+    const reservation = await Reservation.find({
+      where: {
+        id: roomId,
+        arrival_date: LessThanOrEqual(departureDate), //signifie que la date d'arrivée doit être inférieure ou égale à la date de départ de la période demandée.
+        departure_date: MoreThanOrEqual(arrivalDate), // signifie que la date de départ doit être supérieure ou égale à la date d'arrivée de la période demandée.
+
+      },
+
+    });
+    console.log(reservation, reservation.length === 0);
+
+    return reservation.length === 0; // si le tableau renvoi zéro, ca veut dire que la chambre est libre et renvoi true sinon false chambre indisponible
+  }
+
+
   /** 
   * @method findRoomByNumberAndHotel :
   * Method permettant de rechercher une chambre par son numéro.
@@ -69,6 +91,7 @@ export class RoomsService {
     });
   }
 
+
   /** 
   * @method updateHotel :
   * 
@@ -79,9 +102,9 @@ export class RoomsService {
   */
   async updateRoom(id: number, updateRoomDto: UpdateRoomDto): Promise<Room> {
 
-    const room = await Room.findOneBy({ id }); // const permettant de retrouver une présentation par son id
+    const room = await Room.findOneBy({ id });
 
-    room.number_room = updateRoomDto.number_room;// room.number_room = donnée actuelle ; updateRoomDto.number_room = nouvelle donnée
+    room.number_room = updateRoomDto.number_room;
     room.price = updateRoomDto.price;
 
     await room.save()

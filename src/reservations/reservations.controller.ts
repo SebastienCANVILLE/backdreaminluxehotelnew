@@ -30,7 +30,7 @@ export class ReservationsController {
   @Post()
   @ApiOperation({ summary: "Création d'une réservation" })
   async createReservation(@Body() createReservationDto: CreateReservationDto, @Req() req) {
-    
+
     // récupération de l'user et vérification de son existance
     const user = req.user;
 
@@ -40,23 +40,29 @@ export class ReservationsController {
 
     // récupération de la chambre et vérification de son existance
     const room = await this.roomsService.findRoomByID(+createReservationDto.roomId);
-    //const room = await this.roomsService.findRoomByNumber(+createReservationDto.roomId);
 
     if (!room) {
       throw new HttpException("La chambre n'existe pas", HttpStatus.NOT_FOUND);
     }
 
+    // Vérification de la disponibilité de la chambre
+    const roomAvailable = await this.roomsService.roomAvailable(createReservationDto.roomId, createReservationDto.arrival_date, createReservationDto.departure_date);
+
+    if (roomAvailable === false) {
+      throw new HttpException("La chambre n'est pas disponible pour ces dates", HttpStatus.BAD_REQUEST);
+    }
+
     //const ref = Math.random()
     // récupération du body via createReservation de l'user et de la chambre afin de lier les trois dans la création de la réservation
-    const createRoom = await this.reservationsService.createReservation(createReservationDto, user, room);
+    const createReservation = await this.reservationsService.createReservation(createReservationDto, user, room);
 
     return {
       statusCode: 201,
-      data: createRoom,
+      data: createReservation,
       message: "La réservation de votre chambre a bien été créé"
     }
 
-  }
+  } 
 
 
   /** 
@@ -66,47 +72,48 @@ export class ReservationsController {
   * * Controler les données entrantes lors de la consultation de toutes les réservations.
   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès..
   */
-    @Get()
-    @ApiOperation({ summary: "Recherche de toutes les réservations" })
-    async findAllReservation() {
-  
-      const reservationsExist = await this.reservationsService.findAllReservation();
-  
-      if (!reservationsExist) {
-        throw new HttpException("Pas de réservations enregistrée", HttpStatus.NOT_FOUND);
-      }
-  
-      return {
-        statusCode: 200,
-        data: reservationsExist,
-        message: "Voici la liste des réservations"
-      }
+  @Get()
+  @ApiOperation({ summary: "Recherche de toutes les réservations" })
+  async findAllReservation() {
+
+    const reservationsExist = await this.reservationsService.findAllReservation(); // CA MARCHE PAS !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    console.log(reservationsExist);
+
+    if (!reservationsExist) {
+      throw new HttpException("Pas de réservations enregistrée", HttpStatus.NOT_FOUND);
     }
-  
-  
-    /** 
-     * @method findReservationByID :
-     * 
-     * Une méthode permettant de :
-     * * Controler les données entrantes lors de la consultation d'une réservation via son id.
-     * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
-    */
-    @Get(':id')
-    @ApiOperation({ summary: "Recherche d'une réservation" })
-    async findReservationByID(@Param('id') id: string) {
-  
-      const reservationExist = await this.roomsService.findRoomByID(+id);
-  
-      if (!reservationExist) {
-        throw new HttpException("La réservation n'existe pas", HttpStatus.NOT_FOUND);
-      }
-  
-      return {
-        statusCode: 200,
-        data: reservationExist,
-        message: "Voici votre réservation"
-      }
+
+    return {
+      statusCode: 200,
+      data: reservationsExist,
+      message: "Voici la liste des réservations"
     }
+  }
+
+
+  /** 
+   * @method findReservationByID :
+   * 
+   * Une méthode permettant de :
+   * * Controler les données entrantes lors de la consultation d'une réservation via son id.
+   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
+  */
+  @Get(':id')
+  @ApiOperation({ summary: "Recherche d'une réservation" })
+  async findReservationByID(@Param('id') id: string) {
+
+    const reservationExist = await this.reservationsService.findReservationByID(+id);
+
+    if (!reservationExist) {
+      throw new HttpException("La réservation n'existe pas", HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      statusCode: 200,
+      data: reservationExist,
+      message: "Voici votre réservation"
+    }
+  }
 
 
   /** 
@@ -123,32 +130,57 @@ export class ReservationsController {
     const reservationExist = await this.reservationsService.findReservationByID(+id);
 
     if (!reservationExist) {
+      throw new HttpException("La réservation n'existe pas", HttpStatus.NOT_FOUND);
+    }
+
+    const room = await this.roomsService.findRoomByID(+updateReservationDto.roomId);
+
+    if (!room) {
       throw new HttpException("La chambre n'existe pas", HttpStatus.NOT_FOUND);
     }
 
-    // voir si on doit vérifier la disponibilité de la chambre
+    // voir le système de vérification de disponibilité de la chambre
 
-    const updateRoom = await this.reservationsService.updateReservation(+id, updateReservationDto);
+    //const updateReservation = await this.reservationsService.updateReservation(id)
+    reservationExist.arrival_date = updateReservationDto.arrival_date;
+    reservationExist.departure_date = updateReservationDto.departure_date;
+    reservationExist.room = room;
+
+    await reservationExist.save()
 
     return {
       statusCode: 200,
-      data: updateRoom,
+      data: reservationExist,
       message: 'Les modifications ont bien été prisent en compte'
     };
   }
 
 
+  /** 
+   * @method reservationDelete :
+   * 
+   * Une méthode permettant de :
+   * * Controler les données entrantes lors de la suppression d'une réservation'.
+   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
+   */
+  @Delete(':id')
+  @ApiOperation({ summary: "Supprimer une réservation" })
+  async reservationDelete(@Param('id') id: string) {
 
+    const reservationExist = await this.reservationsService.findReservationByID(+id);
 
+    if (!reservationExist) {
+      throw new HttpException("La chambre n'existe pas", HttpStatus.NOT_FOUND);
+    }
 
+    const deletedReservation = await this.reservationsService.deleteReservation(+id);
 
-
-
-
-
-
-
-
+    return {
+      statusCode: 200,
+      data: deletedReservation,
+      message: "La réservation a été supprimée"
+    };
+  }
 
 
 }
