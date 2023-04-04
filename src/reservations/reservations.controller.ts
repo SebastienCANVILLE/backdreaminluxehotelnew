@@ -62,7 +62,7 @@ export class ReservationsController {
       message: "La réservation de votre chambre a bien été créé"
     }
 
-  } 
+  }
 
 
   /** 
@@ -124,7 +124,7 @@ export class ReservationsController {
     * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
     */
   @Patch(':id')
-  @ApiOperation({ summary: "Modifier les informations d'une chambre" })
+  @ApiOperation({ summary: "Modifier la réservation d'une chambre" })
   async updateReservation(@Param('id') id: string, @Body() updateReservationDto: UpdateReservationDto) {
 
     const reservationExist = await this.reservationsService.findReservationByID(+id);
@@ -139,7 +139,12 @@ export class ReservationsController {
       throw new HttpException("La chambre n'existe pas", HttpStatus.NOT_FOUND);
     }
 
-    // voir le système de vérification de disponibilité de la chambre
+    // Vérification de la disponibilité de la chambre
+    const roomAvailable = await this.roomsService.roomAvailable(updateReservationDto.roomId, updateReservationDto.arrival_date, updateReservationDto.departure_date);
+
+    if (roomAvailable === false) {
+      throw new HttpException("La chambre n'est pas disponible pour ces dates", HttpStatus.BAD_REQUEST);
+    }
 
     //const updateReservation = await this.reservationsService.updateReservation(id)
     reservationExist.arrival_date = updateReservationDto.arrival_date;

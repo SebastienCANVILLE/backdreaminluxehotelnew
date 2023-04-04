@@ -4,12 +4,14 @@ import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt'
 import { UpdateUserDto } from './dto/update-user.dto';
 
+
 /**
  * @class UsersService :
  * Une class permettant de gérer les requêtes SQL de plusieurs méthodes CRUD.
 */
 @Injectable()
 export class UsersService {
+
 
   /** 
     * @method createUser :
@@ -18,7 +20,6 @@ export class UsersService {
     * 
     * * Crypter le password grâce au hash/bcrypt lors de la création du compte client.
     */
-
   async createUser(createUserDto: CreateUserDto): Promise<User> { // Promise (promet de te renvoyer un user)
 
     const user = User.create(createUserDto)
@@ -29,6 +30,7 @@ export class UsersService {
 
   }
 
+  
   /** 
     * @method findAll :
     * Method permettant de rechercher tous les utilisateurs.
@@ -73,6 +75,7 @@ export class UsersService {
     updateUser.zipCode = updateUserDto.zipCode;
     updateUser.city = updateUserDto.city;
     updateUser.country = updateUserDto.country;
+    updateUser.phone_number =updateUserDto.phone_number;
 
     await User.save(updateUser);
 
@@ -85,7 +88,7 @@ export class UsersService {
   * Method permettant de supprimer l'utlisateur connecté.
   * Avec cette méthode impossible qu'un utilisateur puisse supprimer un autre utilisateur via son id
   */
-  async deletedUser(id: number): Promise<User> { // permet la suppression de l'user par l'id
+  async deletedUser(id: number): Promise<User> {
 
     const dataDeleted = await User.findOneBy({ id })
     await User.delete({ id });

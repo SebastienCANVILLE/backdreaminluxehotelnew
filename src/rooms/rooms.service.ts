@@ -51,27 +51,44 @@ export class RoomsService {
   * @method findRoomByNumber :
   * Method permettant de rechercher une chambre par son numéro.
   * utiliser dans le controller de createRoom pour ne pas avoir un doublon de chambre avec le même numéro mais également pouvoir utiliser ce même numéro dans un autre hotel.
+  * si l'array de la réservation renvoi zéro, ca veut dire que la chambre est libre et renvoi true sinon false chambre indisponible.
   */
   async findRoomByNumber(number: string): Promise<Room> {
     return await Room.findOneBy({ number_room: number });
   }
 
-  // méthode permettant de vérifier si la chambre est disponible
-  async roomAvailable(roomId: number, arrivalDate: Date, departureDate: Date): Promise<Boolean> { // A VOIR !!!!!!!!!!!!!!!!!!!!!!!!
+
+  /**
+   * @method roomAvailable :
+   * méthode permettant de vérifier si la chambre selectionnée est disponible par un checking des dates entre les dates d'une réservation déjà
+   * existantes pour la dîtes chambre et les nouvelles dates saisies.
+   *  
+   * 
+   */
+  async roomAvailable(roomId: number, arrivalDate: Date, departureDate: Date): Promise<Boolean> {
     console.log(typeof arrivalDate);
 
     const reservation = await Reservation.find({
-      where: {
-        id: roomId,
-        arrival_date: LessThanOrEqual(departureDate), //signifie que la date d'arrivée doit être inférieure ou égale à la date de départ de la période demandée.
-        departure_date: MoreThanOrEqual(arrivalDate), // signifie que la date de départ doit être supérieure ou égale à la date d'arrivée de la période demandée.
+      where: [
+        // vérification de la date de départ  
+        {
+          room: { id: roomId },
+          arrival_date: LessThanOrEqual(arrivalDate),
+          departure_date: MoreThanOrEqual(arrivalDate),
 
-      },
+        },
+        //vérification de la date d'arrivée
+        {
+          room: { id: roomId },
+          arrival_date: LessThanOrEqual(departureDate),
+          departure_date: MoreThanOrEqual(departureDate),
+        },
+      ]
 
     });
     console.log(reservation, reservation.length === 0);
 
-    return reservation.length === 0; // si le tableau renvoi zéro, ca veut dire que la chambre est libre et renvoi true sinon false chambre indisponible
+    return reservation.length === 0;
   }
 
 

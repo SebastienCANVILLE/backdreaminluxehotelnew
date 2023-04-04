@@ -4,7 +4,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { Patch, Req, UseGuards, UseInterceptors } from '@nestjs/common/decorators';
 import { UpdateUserDto } from './dto/update-user.dto';
 //import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { ApiProperty, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { AdminGuard } from 'src/auth/admin.guard';
 
 /**
  * @class UsersController
@@ -15,11 +17,12 @@ import { ApiProperty, ApiTags } from '@nestjs/swagger';
  * * Celle-ci est dédiée à la création de comptes, à la recherche via des critères, à la modifification de données et à la suppression d'un compte client.
  */
 @ApiTags('Users')
-@UseInterceptors(ClassSerializerInterceptor) // permet de cacher les données lors d'une requête (password etc...) grâce à l'exclude de l'entity.
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('users')
 
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
+
 
   /** 
    * @method createUser :
@@ -29,9 +32,9 @@ export class UsersController {
    * * Vérifier et imposer que les contraintes soient bien respectées.
    * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
    */
-
+  @ApiBody({ type: CreateUserDto })
   @Post('register')
-  @ApiProperty()
+  @ApiOperation({ summary: "Création d'un compte client" })
   async createUser(@Body() createUserDto: CreateUserDto) {
 
     if (createUserDto.password !== createUserDto.password_confirm) {
@@ -53,6 +56,7 @@ export class UsersController {
     }
   }
 
+
   /** 
   * @method findAllUser :
   * 
@@ -60,9 +64,8 @@ export class UsersController {
   * * Controler les données entrantes lors de la consultation de tous les utilisateurs.
   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès..
   */
-
   @Get()
-  @ApiProperty()
+  @ApiOperation({ summary: "Recherche des comptes clients" })
   async findAllUser() {
 
     const usersExist = await this.usersService.findAllUser();
@@ -88,7 +91,7 @@ export class UsersController {
   */
 
   @Get(':id')
-  @ApiProperty()
+  @ApiOperation({ summary: "Recherche d'un compte client par son Id" })
   async findUserByID(@Param('id') id: string) {
 
     const userExist = await this.usersService.findUserByID(+id);
@@ -112,9 +115,8 @@ export class UsersController {
   * * Controler les données entrantes la recherche d'un compte client via son email.
   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès..
   */
-
   @Get('email/:email')
-  @ApiProperty()
+  @ApiOperation({ summary: "Recherche des comptes clients par son email" })
   async findUserByEmail(@Param('email') email: string) {
 
     const emailExist = await this.usersService.findUserByEmail(email);
@@ -140,14 +142,14 @@ export class UsersController {
   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
   * * Le client doit être loger pour modifier son profil. Il ne peut modifier le profil d'un autre
   */
-
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Patch()
-  @ApiProperty()
+  @ApiOperation({ summary: "Modifier les informations d'un compte client" })
   async update(@Body() updateUserDto: UpdateUserDto, @Req() req) {
 
     const userLog = req.user.id
-    const updateUser = await this.usersService.updateUser(userLog, updateUserDto,);
+
+    const updateUser = await this.usersService.updateUser(userLog, updateUserDto);
 
     return {
       statusCode: 200,
@@ -165,29 +167,51 @@ export class UsersController {
   * Une méthode permettant de :
   * * Controler les données entrantes lors de la suppression du profil par un user.
   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
-  * * Le développeur doit être loger pour pouvoir supprimer son profil. Il ne peut modifier le profil d'un autre
+  * * Le client doit être loger pour pouvoir supprimer son profil.
   */
-
-  //@UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: `suppression d'un compte client log` })
+  @ApiResponse({ status: 200, description: 'Compte supprimé' })
+  @UseGuards(JwtAuthGuard)
   @Delete()
-  @ApiProperty()
   async deletedUser(@Req() req) {
 
-    const id = req.user.id
+    const userLog = req.user.id
 
-    const user = await this.usersService.findUserByID(id);
-
-    if (!user) {
-      throw new HttpException(`L'user demandé n'existe pas`, HttpStatus.NOT_FOUND);
-    }
-
-    const deleted = await this.usersService.deletedUser(id);
+    const deleted = await this.usersService.deletedUser(userLog);
 
     if (!deleted) {
       throw new HttpException('Erreur Server', HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     return { message: `Le compte a bien été supprimé` };
+  }
+
+
+  // Suppression d'un user par son id pour l'admin
+  @ApiOperation({ summary: `suppression d'un compte utilisateur client par son id` })
+  @ApiResponse({ status: 200, description: 'Compte supprimé' })
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+
+    const userExist = await this.usersService.findUserByID(+id);
+
+    if (!userExist) {
+      throw new HttpException("Le client n'existe pas", HttpStatus.NOT_FOUND);
+    }
+
+    const deletedUser = await userExist.remove();
+
+    if (!deletedUser) {
+      throw new HttpException('Erreur Server', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    return {
+      statusCode: 201,
+      message: 'Suppression du compte client effectuée',
+      data: deletedUser
+    }
+
   }
 
 }
