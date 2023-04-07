@@ -25,8 +25,7 @@ export class User extends BaseEntity {
 
     @ApiProperty()
     @Column()
-    @Exclude()
-    salt: string;
+    civility: string;
 
     @ApiProperty()
     @Column()

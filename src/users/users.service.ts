@@ -20,11 +20,11 @@ export class UsersService {
     * 
     * * Crypter le password grâce au hash/bcrypt lors de la création du compte client.
     */
-  async createUser(createUserDto: CreateUserDto): Promise<User> { // Promise (promet de te renvoyer un user)
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
 
     const user = User.create(createUserDto)
-    user.salt = await bcrypt.genSalt();
-    user.password = await bcrypt.hash(createUserDto.password, user.salt);
+    const salt = await bcrypt.genSalt();
+    user.password = await bcrypt.hash(createUserDto.password, salt);
     await user.save()
     return user
 
@@ -69,6 +69,7 @@ export class UsersService {
 
     updateUser.email = updateUserDto.email;
     updateUser.password = updateUserDto.password;
+    updateUser.civility = updateUserDto.civility;
     updateUser.lastname = updateUserDto.lastname;
     updateUser.firstname = updateUserDto.firstname;
     updateUser.adress_line = updateUserDto.adress_line;
