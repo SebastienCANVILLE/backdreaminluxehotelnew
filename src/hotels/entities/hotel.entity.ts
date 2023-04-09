@@ -12,6 +12,10 @@ export class Hotel extends BaseEntity {
     id: number;
 
     @ApiProperty()
+    @Column({ nullable: true })
+    photo: string;
+
+    @ApiProperty()
     @Column()
     name_hotel: string;
 

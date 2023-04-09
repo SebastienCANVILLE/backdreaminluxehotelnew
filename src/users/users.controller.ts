@@ -3,8 +3,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Patch, Req, UseGuards, UseInterceptors } from '@nestjs/common/decorators';
 import { UpdateUserDto } from './dto/update-user.dto';
-//import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { ApiBody, ApiOperation, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AdminGuard } from 'src/auth/admin.guard';
 

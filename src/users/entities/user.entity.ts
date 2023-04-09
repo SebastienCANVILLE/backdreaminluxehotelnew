@@ -61,7 +61,7 @@ export class User extends BaseEntity {
         enum: UserRoleEnum,
         default: UserRoleEnum.USER
     })
-    @Exclude()
+    //@Exclude()
     role: UserRoleEnum;
 
     @ApiProperty({ type: () => Comment })

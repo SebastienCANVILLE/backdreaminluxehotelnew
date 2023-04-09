@@ -11,6 +11,14 @@ export class Room extends BaseEntity {
     id: number;
 
     @ApiProperty()
+    @Column({ nullable: true })
+    photo: string;
+
+    @ApiProperty()
+    @Column({ nullable: true })
+    name: string;
+
+    @ApiProperty()
     @Column()
     number_room: string;
 

@@ -36,7 +36,7 @@ export class RoomsController {
     const numberRoomExist = await this.roomsService.findRoomByNumberAndHotel(createRoomDto.number_room, hotel);
 
     if (numberRoomExist) {
-      throw new HttpException("Le nom de la chambre exist déjà", HttpStatus.CONFLICT);
+      throw new HttpException("Le numéro de la chambre exist déjà", HttpStatus.CONFLICT);
     }
 
     const createRoom = await this.roomsService.createRoom(hotel, createRoomDto);
@@ -44,7 +44,7 @@ export class RoomsController {
     return {
       statusCode: 201,
       data: createRoom,
-      message: "L'hôtel a bien été créé"
+      message: "La chambre a bien été créé"
     }
 
   }

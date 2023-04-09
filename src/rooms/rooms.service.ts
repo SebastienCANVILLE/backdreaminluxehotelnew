@@ -121,6 +121,7 @@ export class RoomsService {
 
     const room = await Room.findOneBy({ id });
 
+    room.name = updateRoomDto.name
     room.number_room = updateRoomDto.number_room;
     room.price = updateRoomDto.price;
 
