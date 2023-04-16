@@ -11,9 +11,9 @@ export class Reservation extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    /* @ApiProperty()
-    @Column()
-    reference: string; */
+    @ApiProperty()
+    @Column({ nullable: true })
+    reference: string;
 
     @ApiProperty()
     @Column({ type: 'date' }) //{ type: 'timestamp', precision: 3 }
