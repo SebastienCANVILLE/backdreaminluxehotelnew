@@ -45,6 +45,11 @@ export class ReservationsController {
       throw new HttpException("La chambre n'existe pas", HttpStatus.NOT_FOUND);
     }
 
+    // vérification que la date d'arrivée est inférieure ou égale à ma date de départ
+    if (createReservationDto.arrival_date >= createReservationDto.departure_date) {
+      throw new HttpException("La date de départ doit être supérieure à la date d'arrivée", HttpStatus.BAD_REQUEST);
+    }
+
     // Vérification de la disponibilité de la chambre
     const roomAvailable = await this.roomsService.roomAvailable(createReservationDto.roomId, createReservationDto.arrival_date, createReservationDto.departure_date);
 
