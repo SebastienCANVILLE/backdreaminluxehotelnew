@@ -50,6 +50,10 @@ export class ReservationsController {
       throw new HttpException("La date de départ doit être supérieure à la date d'arrivée", HttpStatus.BAD_REQUEST);
     }
 
+    if (new Date(createReservationDto.arrival_date) <= new Date(Date.now()) || new Date(createReservationDto.departure_date) <= new Date(Date.now())){
+    throw new HttpException("La date choisie ne peux pas être antérieure à la date d'aujourd'hui", HttpStatus.BAD_REQUEST);
+    }
+
     // Vérification de la disponibilité de la chambre
     const roomAvailable = await this.roomsService.roomAvailable(createReservationDto.roomId, createReservationDto.arrival_date, createReservationDto.departure_date);
 
@@ -57,7 +61,6 @@ export class ReservationsController {
       throw new HttpException("La chambre n'est pas disponible pour ces dates", HttpStatus.BAD_REQUEST);
     }
 
-    //const ref = Math.random()
     // récupération du body via createReservation de l'user et de la chambre afin de lier les trois dans la création de la réservation
     const createReservation = await this.reservationsService.createReservation(createReservationDto, user, room);
 
