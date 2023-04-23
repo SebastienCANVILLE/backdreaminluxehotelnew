@@ -18,10 +18,10 @@ export class ReservationsService {
   */
   async createReservation(createReservationDto: CreateReservationDto, userReservation: User, roomReservation: Room): Promise<Reservation> {
 
-    const newReservation = Reservation.create({ ...createReservationDto })
+    const newReservation = Reservation.create({ ...createReservationDto });
     newReservation.reference = uuidv4(); //génère un numéro de série aléatoire
-    newReservation.user = userReservation // permet de lier le client à la réservation
-    newReservation.room = roomReservation // permet de lier la chambre à la réservation
+    newReservation.user = userReservation; // permet de lier le client à la réservation
+    newReservation.room = roomReservation;// permet de lier la chambre à la réservation
 
     await newReservation.save()
 

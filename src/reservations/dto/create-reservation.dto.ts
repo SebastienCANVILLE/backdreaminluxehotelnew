@@ -20,4 +20,8 @@ export class CreateReservationDto {
     @ApiProperty()
     @IsNumber()
     roomId: number
+
+    @ApiProperty()
+    @IsNumber()
+    totalPrice: number
 }

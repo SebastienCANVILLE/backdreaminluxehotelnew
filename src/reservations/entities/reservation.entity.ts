@@ -12,7 +12,7 @@ export class Reservation extends BaseEntity {
     id: number;
 
     @ApiProperty()
-    @Column({ nullable: true })
+    @Column(/* { nullable: true } */)
     reference: string;
 
     @ApiProperty()
@@ -23,6 +23,9 @@ export class Reservation extends BaseEntity {
     @Column({ type: 'date' } )
     departure_date: Date;
 
+    @ApiProperty()
+    @Column()
+    totalPrice: number;
 
     @ApiProperty({ type: () => Room })
     @ManyToOne(() => Room, (room) => room.reservations, { onDelete: 'CASCADE' })
