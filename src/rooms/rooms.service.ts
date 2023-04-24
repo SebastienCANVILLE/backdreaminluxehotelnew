@@ -5,7 +5,7 @@ import { UpdateRoomDto } from './dto/update-room.dto';
 import { Room } from './entities/room.entity';
 import { LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 import { Reservation } from 'src/reservations/entities/reservation.entity';
-import { log } from 'console';
+
 
 @Injectable()
 export class RoomsService {
@@ -66,8 +66,7 @@ export class RoomsService {
    * 
    */
   async roomAvailable(roomId: number, arrivalDate: Date, departureDate: Date): Promise<Boolean> {
-    console.log(typeof arrivalDate);
-
+    
     const reservation = await Reservation.find({
       where: [
         // vérification de la date de départ  
@@ -88,7 +87,7 @@ export class RoomsService {
     });
     console.log(reservation, reservation.length === 0);
 
-    return reservation.length === 0;
+    return reservation.length === 0; // true disponible / false indisponible
   }
 
 

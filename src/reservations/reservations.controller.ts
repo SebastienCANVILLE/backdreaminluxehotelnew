@@ -7,9 +7,10 @@ import { RoomsService } from 'src/rooms/rooms.service';
 import { UsersService } from 'src/users/users.service';
 import { UseGuards, UseInterceptors } from '@nestjs/common/decorators';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { CheckDisponibilityDto } from './dto/check-disponibility.dto';
 
 @UseInterceptors(ClassSerializerInterceptor)
-@ApiTags('Rooms')
+@ApiTags('reservations')
 @Controller('reservations')
 export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService,
@@ -50,8 +51,9 @@ export class ReservationsController {
       throw new HttpException("La date de départ doit être supérieure à la date d'arrivée", HttpStatus.BAD_REQUEST);
     }
 
-    if (new Date(createReservationDto.arrival_date) <= new Date(Date.now()) || new Date(createReservationDto.departure_date) <= new Date(Date.now())){
-    throw new HttpException("La date choisie ne peux pas être antérieure à la date d'aujourd'hui", HttpStatus.BAD_REQUEST);
+    // vérification que la date de départ ou d'arrivée n'est pas inférieure à la date d'aujourd'hui
+    if (new Date(createReservationDto.arrival_date) <= new Date(Date.now()) || new Date(createReservationDto.departure_date) <= new Date(Date.now())) {
+      throw new HttpException("La date choisie ne peux pas être antérieure à la date d'aujourd'hui", HttpStatus.BAD_REQUEST);
     }
 
     // Vérification de la disponibilité de la chambre
@@ -71,7 +73,45 @@ export class ReservationsController {
     }
 
   }
+  //-----------------------------------------------------------------------------------------------------------------------
+  @ApiBody({ type: CheckDisponibilityDto })
+  @Post('/check')
+  @ApiOperation({ summary: "Vérifier la disponibilité d'une chambre" })
+  async checkDisponibility(@Body() checkDisponibilityDto: CheckDisponibilityDto) {
 
+    // récupération de la chambre et vérification de son existance
+    const room = await this.roomsService.findRoomByID(+checkDisponibilityDto.roomId);
+
+    if (!room) {
+      throw new HttpException("La chambre n'existe pas", HttpStatus.NOT_FOUND);
+    }
+
+    // vérification que la date d'arrivée est inférieure ou égale à ma date de départ
+    if (checkDisponibilityDto.arrival_date >= checkDisponibilityDto.departure_date) {
+      throw new HttpException("La date de départ doit être supérieure à la date d'arrivée", HttpStatus.BAD_REQUEST);
+    }
+
+    // vérification que la date de départ ou d'arrivée n'est pas inférieure à la date d'aujourd'hui
+    if (new Date(checkDisponibilityDto.arrival_date) <= new Date(Date.now()) || new Date(checkDisponibilityDto.departure_date) <= new Date(Date.now())) {
+      throw new HttpException("La date choisie ne peux pas être antérieure à la date d'aujourd'hui", HttpStatus.BAD_REQUEST);
+    }
+
+    // Vérification de la disponibilité de la chambre
+    const roomAvailable = await this.roomsService.roomAvailable(checkDisponibilityDto.roomId, checkDisponibilityDto.arrival_date, checkDisponibilityDto.departure_date);
+
+    if (roomAvailable === false) {
+      throw new HttpException("La chambre n'est pas disponible pour ces dates", HttpStatus.BAD_REQUEST);
+    }
+
+    //const createReservation = await this.reservationsService.createReservation(checkDisponibilityDto);
+
+    return {
+      statusCode: 201,
+      data: roomAvailable
+    }
+
+  }
+  //----------------------------------------------------------------------------------------------------------------------------
 
   /** 
   * @method findAllReservation :
