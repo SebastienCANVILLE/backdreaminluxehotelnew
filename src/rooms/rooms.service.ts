@@ -66,24 +66,15 @@ export class RoomsService {
    * 
    */
   async roomAvailable(roomId: number, arrivalDate: Date, departureDate: Date): Promise<Boolean> {
+
     
+
     const reservation = await Reservation.find({
-      where: [
-        // vérification de la date de départ  
-        {
-          room: { id: roomId },
-          arrival_date: LessThanOrEqual(arrivalDate),
-          departure_date: MoreThanOrEqual(arrivalDate),
-
-        },
-        //vérification de la date d'arrivée
-        {
-          room: { id: roomId },
-          arrival_date: LessThanOrEqual(departureDate),
-          departure_date: MoreThanOrEqual(departureDate),
-        },
-      ]
-
+      where: {
+        room: { id: roomId },
+        departure_date: MoreThanOrEqual(arrivalDate), // signifie que la date de départ doit être supérieure ou égale à la date d'arrivée de la période
+        arrival_date: LessThanOrEqual(departureDate), // signifie que la date d'arrivée doit être inférieure ou égale à la date de départ de la période 
+      }
     });
     console.log(reservation, reservation.length === 0);
 
@@ -145,3 +136,27 @@ export class RoomsService {
   }
 
 }
+
+
+
+//En attente ------------------------------------------------
+/* const reservation = await Reservation.find({
+      where: [
+        // vérification de la date de départ  
+        {
+          room: { id: roomId },
+          arrival_date: LessThanOrEqual(arrivalDate),
+          departure_date: MoreThanOrEqual(arrivalDate),
+
+        },
+        //vérification de la date d'arrivée
+        {
+          room: { id: roomId },
+          arrival_date: LessThanOrEqual(departureDate),
+          departure_date: MoreThanOrEqual(departureDate),
+        },
+      ]
+
+    }); */
+
+//------------------------------------------------------------
