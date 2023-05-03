@@ -14,6 +14,7 @@ export class CheckDisponibilityDto extends PartialType(CreateReservationDto) {
     @IsNotEmpty()
     departure_date: Date;
 
+    @ApiProperty()
     @IsNumber()
     roomId: number
 

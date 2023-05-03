@@ -1,5 +1,4 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { format } from "date-fns";
 import { Room } from "src/rooms/entities/room.entity";
 import { User } from "src/users/entities/user.entity";
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
@@ -12,7 +11,7 @@ export class Reservation extends BaseEntity {
     id: number;
 
     @ApiProperty()
-    @Column(/* { nullable: true } */)
+    @Column()
     reference: string;
 
     @ApiProperty()

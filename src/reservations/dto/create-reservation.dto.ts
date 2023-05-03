@@ -4,7 +4,7 @@ import { ApiProperty } from "@nestjs/swagger";
 export class CreateReservationDto {
 
     @ApiProperty()
-    @IsString()    
+    @IsString()   
     reference: string;
 
     @ApiProperty()

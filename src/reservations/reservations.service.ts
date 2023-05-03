@@ -36,7 +36,11 @@ export class ReservationsService {
   */
   async findAllReservation(): Promise<Reservation[]> {
 
-    return await Reservation.find();
+    return await Reservation.find({
+      relations: {
+        room: true
+      }
+    });
   }
 
 

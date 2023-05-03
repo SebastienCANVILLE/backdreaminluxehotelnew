@@ -182,7 +182,9 @@ export class UsersController {
       throw new HttpException('Erreur Server', HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    return { message: `Le compte a bien été supprimé` };
+    return { statusCode: 200,
+      message: 'Suppression du compte client effectuée',
+      data: deleted };
   }
 
 
@@ -206,7 +208,7 @@ export class UsersController {
     }
 
     return {
-      statusCode: 201,
+      statusCode: 200,
       message: 'Suppression du compte client effectuée',
       data: deletedUser
     }

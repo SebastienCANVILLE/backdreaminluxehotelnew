@@ -73,7 +73,16 @@ export class ReservationsController {
     }
 
   }
-  //-----------------------------------------------------------------------------------------------------------------------
+  
+
+    /** 
+* @method checkDisponibility :
+* 
+* Une méthode permettant de :
+* * Controler les données entrantes lors du checking d'une chambre d'hotel.
+* * Vérifier et imposer que les contraintes soient bien respectées.
+* * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
+*/
   @ApiBody({ type: CheckDisponibilityDto })
   @Post('/check')
   @ApiOperation({ summary: "Vérifier la disponibilité d'une chambre" })
@@ -111,7 +120,7 @@ export class ReservationsController {
     }
 
   }
-  //----------------------------------------------------------------------------------------------------------------------------
+  
 
   /** 
   * @method findAllReservation :
@@ -124,7 +133,7 @@ export class ReservationsController {
   @ApiOperation({ summary: "Recherche de toutes les réservations" })
   async findAllReservation() {
 
-    const reservationsExist = await this.reservationsService.findAllReservation(); // CA MARCHE PAS !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    const reservationsExist = await this.reservationsService.findAllReservation();
     console.log(reservationsExist);
 
     if (!reservationsExist) {
@@ -217,6 +226,7 @@ export class ReservationsController {
    * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
    */
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: "Supprimer une réservation" })
   async reservationDelete(@Param('id') id: string) {
 
