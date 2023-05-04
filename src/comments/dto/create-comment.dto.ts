@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateCommentDto {
@@ -7,5 +7,9 @@ export class CreateCommentDto {
     @IsString()
     @IsNotEmpty()
     commentary: string;
+
+    @ApiProperty()
+    @IsNumber()
+    hotelId: number;
 
 }

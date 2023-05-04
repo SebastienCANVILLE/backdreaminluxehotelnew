@@ -8,6 +8,7 @@ import { UsersService } from 'src/users/users.service';
 import { UseGuards, UseInterceptors } from '@nestjs/common/decorators';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CheckDisponibilityDto } from './dto/check-disponibility.dto';
+import { ConsultantGuard } from 'src/auth/consultant.guard';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @ApiTags('reservations')
@@ -134,10 +135,9 @@ export class ReservationsController {
   async findAllReservation() {
 
     const reservationsExist = await this.reservationsService.findAllReservation();
-    console.log(reservationsExist);
 
     if (!reservationsExist) {
-      throw new HttpException("Pas de réservations enregistrée", HttpStatus.NOT_FOUND);
+      throw new HttpException("Pas de réservations enregistrées", HttpStatus.NOT_FOUND);
     }
 
     return {
@@ -181,6 +181,7 @@ export class ReservationsController {
     * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
     */
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, ConsultantGuard)
   @ApiOperation({ summary: "Modifier la réservation d'une chambre" })
   async updateReservation(@Param('id') id: string, @Body() updateReservationDto: UpdateReservationDto) {
 

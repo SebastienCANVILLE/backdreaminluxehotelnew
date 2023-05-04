@@ -1,10 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpException, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpException, Req, UseGuards } from '@nestjs/common';
 import { RoomsService } from './rooms.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateHotelDto } from 'src/hotels/dto/create-hotel.dto';
 import { HotelsService } from 'src/hotels/hotels.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { AdminGuard } from 'src/auth/admin.guard';
 
 @ApiTags('Rooms')
 @Controller('rooms')
@@ -22,6 +24,7 @@ export class RoomsController {
  */
   @ApiBody({ type: CreateRoomDto })
   @Post('register/:id')
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @ApiOperation({ summary: "Création d'une chambre" })
   async createRoom(@Param('id') hotelId: string, @Body() createRoomDto: CreateRoomDto, @Req() req) {
 
@@ -108,6 +111,7 @@ export class RoomsController {
     * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
     */
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @ApiOperation({ summary: "Modifier les informations d'une chambre" })
   async updateRoom(@Param('id') id: string, @Body() updateRoomDto: UpdateRoomDto) {
 
@@ -141,6 +145,7 @@ export class RoomsController {
   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
   */
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @ApiOperation({ summary: "Supprimer une chambre" })
   async roomDelete(@Param('id') id: number) {
 

@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, HttpStatus, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, HttpStatus, HttpException, UseGuards } from '@nestjs/common';
 import { HotelsService } from './hotels.service';
 import { CreateHotelDto } from './dto/create-hotel.dto';
 import { UpdateHotelDto } from './dto/update-hotel.dto';
 import { ApiBody, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { AdminGuard } from 'src/auth/admin.guard';
 
 @ApiTags('Hotels')
 @Controller('hotels')
@@ -20,6 +22,7 @@ export class HotelsController {
    */
   @ApiBody({ type: CreateHotelDto })
   @Post()
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @ApiOperation({ summary: "Création d'un hôtel" })
   async createHotel(@Body() createHotelDto: CreateHotelDto) {
     
@@ -99,6 +102,7 @@ export class HotelsController {
     * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
     */
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @ApiOperation({ summary: "Modifier les informations d'un hôtel" })
   async updateHotel(@Param('id') id: string, @Body() updateHotelDto: UpdateHotelDto) {
 
@@ -134,6 +138,7 @@ export class HotelsController {
   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
   */
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @ApiOperation({ summary: "Supprimer un hôtel" })
   async hotelDelete(@Param('id') id: number) {
 
