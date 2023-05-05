@@ -12,7 +12,13 @@ export class Comment extends BaseEntity {
 
     @ApiProperty()
     @Column()
+    clientName: string;
+
+    @ApiProperty()
+    @Column()
     commentary: string;
+
+
 
     @ApiProperty({ type: () => User })
     @ManyToOne(() => User, (user) => user.comments, { onDelete: 'CASCADE' })

@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreateRoomDto {
 
     @ApiProperty()
-    //@IsNotEmpty()
+    @IsNotEmpty()
     name: string;
 
     @ApiProperty()

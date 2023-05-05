@@ -132,11 +132,11 @@ async createComment(@Body() createCommentDto: CreateCommentDto, @Req() req) {
       throw new HttpException("Le commentaire n'existe pas", HttpStatus.NOT_FOUND);
     }
 
-    const deletedReservation = await this.commentsService.deleteComment(+id);
+    const deletedComment = await this.commentsService.deleteComment(+id);
 
     return {
       statusCode: 200,
-      data: deletedReservation,
+      data: deletedComment,
       message: "Le commentaire a été supprimée"
     };
   }
