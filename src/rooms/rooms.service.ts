@@ -62,12 +62,8 @@ export class RoomsService {
    * @method roomAvailable :
    * méthode permettant de vérifier si la chambre selectionnée est disponible par un checking des dates entre les dates d'une réservation déjà
    * existantes pour la dîtes chambre et les nouvelles dates saisies.
-   *  
-   * 
    */
-  async roomAvailable(roomId: number, arrivalDate: Date, departureDate: Date): Promise<Boolean> {
-
-    
+  async roomAvailable(roomId: number, arrivalDate: Date, departureDate: Date): Promise<Boolean> {    
 
     const reservation = await Reservation.find({
       where: {

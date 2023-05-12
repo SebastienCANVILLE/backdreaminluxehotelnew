@@ -13,7 +13,7 @@ export class ReservationsService {
   /** 
   * @method createReservation :
   * 
-  * Method permettant de créer une chambre suivant le modèle du CreatRoomDto.
+  * Method permettant de créer une réseravation suivant le modèle du CreatRoomDto.
   * permet de lier le client à la réservation lors de sa création.
   * permet de lier la chambre à la réservation lors de sa création.
   */

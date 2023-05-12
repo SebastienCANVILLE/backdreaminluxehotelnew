@@ -113,8 +113,6 @@ export class ReservationsController {
       throw new HttpException("La chambre n'est pas disponible pour ces dates", HttpStatus.BAD_REQUEST);
     }
 
-    //const createReservation = await this.reservationsService.createReservation(checkDisponibilityDto);
-
     return {
       statusCode: 201,
       data: roomAvailable
