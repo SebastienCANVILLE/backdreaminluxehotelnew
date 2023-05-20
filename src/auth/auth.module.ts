@@ -19,7 +19,7 @@ import { UserGuard } from './user.guard';
     PassportModule,
     JwtModule.register({
       secret: process.env.SECRET,
-      signOptions: { expiresIn: '5000000s' },
+      signOptions: { expiresIn: '5000s' },
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy, UsersService, AdminGuard, ConsultantGuard, UserGuard],

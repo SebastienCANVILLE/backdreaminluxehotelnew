@@ -17,7 +17,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
     const emailGoodWrited = await User.findOneBy({ email })
 
-    if (emailGoodWrited === null) { // permet de renvoyer un message d'erreur en cas de lors de la connexion si l'email est mal renseigné
+    if (emailGoodWrited === null) { // permet de renvoyer un message d'erreur, si l'email est mal renseigné
       throw new HttpException("Mauvais Email ou password", HttpStatus.NOT_ACCEPTABLE);
     }
 
