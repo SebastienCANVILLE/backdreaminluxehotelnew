@@ -1,10 +1,10 @@
 import { Exclude } from "class-transformer";
 import { Column, Entity, PrimaryGeneratedColumn, BaseEntity, OneToMany, ManyToMany } from "typeorm";
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRoleEnum } from "src/enum/user-role.enum";
-import { Reservation } from "src/reservations/entities/reservation.entity";
-import { Comment } from "src/comments/entities/comment.entity";
-import { Hotel } from "src/hotels/entities/hotel.entity";
+import { UserRoleEnum } from "../../enum/user-role.enum";
+import { Reservation } from "../../reservations/entities/reservation.entity";
+import { Comment } from "../../comments/entities/comment.entity";
+import { Hotel } from "../../hotels/entities/hotel.entity";
 
 
 @Entity('users')

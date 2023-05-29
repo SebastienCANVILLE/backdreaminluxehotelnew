@@ -3,12 +3,12 @@ import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { RoomsService } from 'src/rooms/rooms.service';
-import { UsersService } from 'src/users/users.service';
+import { RoomsService } from '../rooms/rooms.service';
+import { UsersService } from '../users/users.service';
 import { UseGuards, UseInterceptors } from '@nestjs/common/decorators';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CheckDisponibilityDto } from './dto/check-disponibility.dto';
-import { ConsultantGuard } from 'src/auth/consultant.guard';
+import { ConsultantGuard } from '../auth/consultant.guard';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @ApiTags('reservations')

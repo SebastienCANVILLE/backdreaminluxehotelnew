@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
-import { Hotel } from 'src/hotels/entities/hotel.entity';
-import { User } from 'src/users/entities/user.entity';
+import { Hotel } from '../hotels/entities/hotel.entity';
+import { User } from '../users/entities/user.entity';
 import { Comment } from './entities/comment.entity';
 
 @Injectable()

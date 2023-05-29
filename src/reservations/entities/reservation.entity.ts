@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Room } from "src/rooms/entities/room.entity";
-import { User } from "src/users/entities/user.entity";
+import { Room } from "../../rooms/entities/room.entity";
+import { User } from "../../users/entities/user.entity";
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('reservations')

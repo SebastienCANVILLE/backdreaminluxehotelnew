@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Hotel } from "src/hotels/entities/hotel.entity";
-import { User } from "src/users/entities/user.entity";
+import { Hotel } from "../../hotels/entities/hotel.entity";
+import { User } from "../../users/entities/user.entity";
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('comments')

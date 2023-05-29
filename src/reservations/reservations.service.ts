@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Room } from 'src/rooms/entities/room.entity';
-import { User } from 'src/users/entities/user.entity';
+import { Room } from '../rooms/entities/room.entity';
+import { User } from '../users/entities/user.entity';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { Reservation } from './entities/reservation.entity';

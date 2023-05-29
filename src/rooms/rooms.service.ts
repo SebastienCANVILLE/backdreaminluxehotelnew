@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { Hotel } from 'src/hotels/entities/hotel.entity';
+import { Hotel } from '../hotels/entities/hotel.entity';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { Room } from './entities/room.entity';
 import { LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
-import { Reservation } from 'src/reservations/entities/reservation.entity';
+import { Reservation } from '../reservations/entities/reservation.entity';
 
 
 @Injectable()

@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CommentsController } from './comments.controller';
-import { HotelsService } from 'src/hotels/hotels.service';
-import { UsersService } from 'src/users/users.service';
+import { HotelsService } from '../hotels/hotels.service';
+import { UsersService } from '../users/users.service';
 
 @Module({
   controllers: [CommentsController],

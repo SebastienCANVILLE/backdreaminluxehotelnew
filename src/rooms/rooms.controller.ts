@@ -4,9 +4,9 @@ import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateHotelDto } from 'src/hotels/dto/create-hotel.dto';
-import { HotelsService } from 'src/hotels/hotels.service';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { AdminGuard } from 'src/auth/admin.guard';
+import { HotelsService } from '../hotels/hotels.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { AdminGuard } from '../auth/admin.guard';
 
 @ApiTags('Rooms')
 @Controller('rooms')
